@@ -1,4 +1,6 @@
-const fabricEvents = [
+import { fabric } from 'fabric';
+
+const fabricBuiltInEvents = [
   'after:render',
   'before:render',
   'canvas:cleared',
@@ -26,4 +28,13 @@ const fabricEvents = [
   'text:changed'
 ];
 
-export default fabricEvents;
+export default function() {
+  let fabricEvents;
+
+  if(fabric.customEvents)
+    fabricEvents = fabricBuiltInEvents.concat(fabric.customEvents);
+  else
+    fabricEvents = fabricBuiltInEvents;
+  
+  return fabricEvents;
+};

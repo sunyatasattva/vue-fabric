@@ -5,7 +5,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueFabric from './VueFabric'
   
-Vue.use(VueFabric);
+Vue.use(VueFabric, {
+  customEvents: ['object:addAsActiveObject']
+});
 
 new Vue({ // eslint-disable-line no-new
   el: '#app',

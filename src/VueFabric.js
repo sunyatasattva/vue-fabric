@@ -40,7 +40,8 @@ fabric.Object.prototype.toObject = function() {
 }
 
 const VueFabric = {
-  install(Vue,options) {
+  install(Vue, options = {}) {
+    fabric.customEvents = options.customEvents;
     Vue.prototype.$fabric = fabric;
     
     Vue.component( 'fabric-canvas', Vue.extend(FabricCanvas) );
