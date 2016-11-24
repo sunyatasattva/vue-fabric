@@ -10,6 +10,10 @@ import canvasInit from './utils/canvasInit';
 export default {
   name: 'fabric-canvas',
   props: {
+    namespace: {
+      type: String,
+      default: 'Canvas'
+    },
     value: {
       type: Object,
       default() { return {}; }
@@ -18,12 +22,11 @@ export default {
   data() {
     return {
       activeObject: null,
-      canvas: {},
       id: `fabric_canvas_${this._uid}`
     }
   },
   mounted() {
-    canvasInit(this);
+    canvasInit(this, this.namespace);
   },
   watch: {
     /*
