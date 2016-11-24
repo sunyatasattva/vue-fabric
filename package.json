@@ -25,6 +25,7 @@
     "deep-equal": "^1.0.1",
     "fabric": "^1.7.0",
     "lodash.debounce": "^4.0.8",
+    "uuid-lib": "0.0.6",
     "vue": "^2.0.1"
   },
   "devDependencies": {
