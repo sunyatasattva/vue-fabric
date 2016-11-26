@@ -32,13 +32,19 @@ const eventRemap = function( canvas, component, events = getFabricEvents() ) {
  * Useful if the original fabric Canvas class was extended by some other class.
  */
 const init = function(component, namespace = 'Canvas') {
-  const canvas = new fabric[namespace](component.$el);
+  const canvas = new fabric[namespace](component.$el, {
+    // Disabling this for performance reason: we load the entire canvas
+    // every time and perform the render manually instead
+    renderOnAddRemove: false,
+    width: component.width,
+    height: component.height
+  });
     
   component.$canvas = canvas;
 
   eventRemap(canvas, component);
 
-  canvas.loadFromJSON( component.value, canvas.renderAll.bind(canvas) );
+  canvas.loadFromJSON( component.value.canvas, canvas.renderAll.bind(canvas) );
 
   canvas.on('after:render', debounce(() => { component.syncCanvas(); }, 100) );
 }

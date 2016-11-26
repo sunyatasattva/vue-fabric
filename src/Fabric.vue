@@ -17,11 +17,19 @@ export default {
     value: {
       type: Object,
       default() { return {}; }
+    },
+    
+    height: {
+      type: Number,
+      default: 800
+    },
+    width: {
+      type: Number,
+      default: 800
     }
   },
   data() {
     return {
-      activeObject: null,
       id: `fabric_canvas_${this._uid}`
     }
   },
@@ -40,10 +48,11 @@ export default {
      */
     value: {
       handler(val, old) {
-        this.activeObject = this.$canvas.getActiveObject();
-        if( !equal(this.$canvas.toObject(), val) ) {
-          this.$canvas.loadFromJSON( val, this.load );
+        if( !equal(this.$canvas.toObject(), val.canvas) ) {
+          this.$canvas.loadFromJSON( val.canvas, this.load );
         }
+        else
+          this.load();
       },
       deep: true
     }
@@ -56,7 +65,7 @@ export default {
       // Caches the currently active object if it still exists in the
       // new canvas.
       let oldActiveObject = this.$canvas.getObjects().find((obj) => {
-        return this.activeObject && obj._uid === this.activeObject._uid;
+        return obj._uid === this.value.meta.activeObject;
       });
       
       this.$canvas.renderAll.call(this.$canvas);
@@ -67,9 +76,15 @@ export default {
      * Emits an `input` event with the new object representation of the canvas.
      */
     syncCanvas() {
-      let canvasObj = this.$canvas.toObject();
+      let canvasObj = this.$canvas.toObject(),
+          activeObject = this.$canvas.getActiveObject()._uid || null;
       
-      this.$emit('input', canvasObj);
+      this.$emit('input', {
+        canvas: canvasObj,
+        meta: {
+          activeObject: activeObject
+        }
+      });
     }
   }
 }
