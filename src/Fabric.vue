@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { fabric } from 'fabric';
 import equal from 'deep-equal';
 import canvasInit from './utils/canvasInit';
   
