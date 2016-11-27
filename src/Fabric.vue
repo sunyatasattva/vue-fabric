@@ -4,11 +4,13 @@
 
 <script>
 import equal from 'deep-equal';
+import get from 'lodash.get';
 import canvasInit from './utils/canvasInit';
   
 export default {
   name: 'fabric-canvas',
   props: {
+    activeObjectId: null,
     namespace: {
       type: String,
       default: 'Canvas'
@@ -36,6 +38,14 @@ export default {
     canvasInit(this, this.namespace);
   },
   watch: {
+    activeObjectId(newActiveObjectId) {
+      let activeObject = this.$canvas.getObjects().find((obj) => {
+        return obj._uid === newActiveObjectId;
+      });
+
+      if(newActiveObjectId && activeObject)
+        this.$canvas.setActiveObject(activeObject);
+    },
     /*
      * Watches when the object representation of the canvas is changed.
      *
@@ -47,11 +57,9 @@ export default {
      */
     value: {
       handler(val, old) {
-        if( !equal(this.$canvas.toObject(), val.canvas) ) {
-          this.$canvas.loadFromJSON( val.canvas, this.load );
+        if( !equal(this.$canvas.toObject(), val) ) {
+          this.$canvas.loadFromJSON( val, this.load );
         }
-        else
-          this.load();
       },
       deep: true
     }
@@ -64,7 +72,7 @@ export default {
       // Caches the currently active object if it still exists in the
       // new canvas.
       let oldActiveObject = this.$canvas.getObjects().find((obj) => {
-        return obj._uid === this.value.meta.activeObject;
+        return obj._uid === this.activeObjectId;
       });
       
       this.$canvas.renderAll.call(this.$canvas);
@@ -76,12 +84,12 @@ export default {
      */
     syncCanvas() {
       let canvasObj = this.$canvas.toObject(),
-          activeObject = this.$canvas.getActiveObject()._uid || null;
+          activeObjectId = get(this.$canvas.getActiveObject(), '_uid');
       
       this.$emit('input', {
         canvas: canvasObj,
         meta: {
-          activeObject: activeObject
+          activeObjectId: activeObjectId
         }
       });
     }

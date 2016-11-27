@@ -44,7 +44,7 @@ const init = function(component, namespace = 'Canvas') {
 
   eventRemap(canvas, component);
 
-  canvas.loadFromJSON( component.value.canvas, canvas.renderAll.bind(canvas) );
+  canvas.loadFromJSON( component.value, canvas.renderAll.bind(canvas) );
 
   canvas.on('after:render', debounce(() => { component.syncCanvas(); }, 100) );
 }
